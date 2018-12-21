@@ -14,7 +14,7 @@ class HotelCreateTableHotel extends Migration {
 	{
         if(! Schema::hasTable('hotel_hotel'))
         {
-            Schema::create('hotel_publication', function (Blueprint $table) {
+            Schema::create('hotel_hotel', function (Blueprint $table) {
                 $table->engine = 'InnoDB';
 
                 $table->increments('id');
@@ -29,16 +29,17 @@ class HotelCreateTableHotel extends Migration {
                 $table->string('email')->nullable();
                 $table->string('phone')->nullable();
                 $table->string('mobile')->nullable();
-                $table->string('fax')->nullable();                              // ?????????? ponemos fax??
                 $table->integer('environment_id')->unsigned()->nullable();
                 $table->integer('decoration_id')->unsigned()->nullable();
                 $table->integer('relationship_id')->unsigned()->nullable();
 
                 // capacity
+                $table->tinyInteger('type_id');                                 // full, mixed or sale of rooms
                 $table->string('n_rooms')->nullable();
                 $table->string('n_places')->nullable();
                 $table->string('n_events_rooms')->nullable();
                 $table->string('n_events_rooms_places')->nullable();
+                $table->boolean('only_adults')->default(false);
 
                 // access
                 $table->string('user');
@@ -80,6 +81,21 @@ class HotelCreateTableHotel extends Migration {
                 $table->foreign('territorial_area_3_id', 'fk04_hotel_hotel')
                     ->references('id')
                     ->on('admin_territorial_area_3')
+                    ->onDelete('restrict')
+                    ->onUpdate('cascade');
+                $table->foreign('environment_id', 'fk05_hotel_hotel')
+                    ->references('id')
+                    ->on('hotel_environment')
+                    ->onDelete('restrict')
+                    ->onUpdate('cascade');
+                $table->foreign('decoration_id', 'fk06_hotel_hotel')
+                    ->references('id')
+                    ->on('hotel_decoration')
+                    ->onDelete('restrict')
+                    ->onUpdate('cascade');
+                $table->foreign('relationship_id', 'fk07_hotel_hotel')
+                    ->references('id')
+                    ->on('hotel_relationship')
                     ->onDelete('restrict')
                     ->onUpdate('cascade');
             });
